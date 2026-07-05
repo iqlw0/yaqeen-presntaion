@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>يقين — وكيل التحقيق في احتيال مطالبات التأمين الصحي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-950:#050d1f;
+  --navy-900:#071429;
+  --navy-800:#0a1f44;
+  --navy-700:#102a5c;
+  --blue-600:#2563eb;
+  --blue-500:#3b82f6;
+  --cyan-400:#22d3ee;
+  --cyan-300:#67e8f9;
+  --sky:#0ea5e9;
+  --ink:#eaf2ff;
+  --muted:#9db4d8;
+  --muted-2:#6f88b3;
+  --white:#ffffff;
+  --glass:rgba(255,255,255,.055);
+  --glass-strong:rgba(255,255,255,.09);
+  --glass-brd:rgba(255,255,255,.14);
+  --good:#34d399;
+  --warn:#fbbf24;
+  --bad:#fb7185;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.65);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Tajawal','IBM Plex Sans Arabic','Cairo',system-ui,-apple-system,sans-serif;
+  background:var(--navy-950);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+/* ===== Stage / 16:9 framing ===== */
+#stage{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(1200px 700px at 85% -10%, rgba(37,99,235,.28), transparent 60%),
+    radial-gradient(1000px 600px at 10% 110%, rgba(34,211,238,.16), transparent 55%),
+    linear-gradient(160deg,var(--navy-950),var(--navy-900) 55%,var(--navy-800));
+}
+#deck{
+  position:relative;
+  width:100vw;height:56.25vw;      /* 16:9 */
+  max-height:100vh;max-width:177.78vh;
+  overflow:hidden;
+}
+
+/* ===== Slides ===== */
+.slide{
+  position:absolute;inset:0;
+  padding:5.2% 6.2%;
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;visibility:hidden;
+  transform:translateX(-44px) scale(.985);
+  transition:opacity .6s var(--ease), transform .7s var(--ease);
+  pointer-events:none;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;z-index:2}
+.slide.prev{transform:translateX(44px) scale(.985)}   /* leaving to the other side (RTL) */
+
+/* subtle grid texture on every slide */
+.slide::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:64px 64px;
+  -webkit-mask-image:radial-gradient(ellipse at 70% 30%,#000,transparent 78%);
+          mask-image:radial-gradient(ellipse at 70% 30%,#000,transparent 78%);
+}
+
+/* ===== Reveal animation (staggered) ===== */
+.slide.active .reveal{animation:rise .7s var(--ease) both}
+.reveal{opacity:0}
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.slide.active .r1{animation-delay:.08s}
+.slide.active .r2{animation-delay:.18s}
+.slide.active .r3{animation-delay:.28s}
+.slide.active .r4{animation-delay:.38s}
+.slide.active .r5{animation-delay:.48s}
+.slide.active .r6{animation-delay:.58s}
+.slide.active .r7{animation-delay:.68s}
+.slide.active .r8{animation-delay:.78s}
+
+/* ===== Typography helpers ===== */
+.kicker{
+  display:inline-flex;align-items:center;gap:.55em;
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-weight:600;font-size:.95vw;letter-spacing:.02em;
+  color:var(--cyan-300);
+  padding:.5em 1.1em;border-radius:999px;
+  background:rgba(34,211,238,.09);border:1px solid rgba(34,211,238,.28);
+  backdrop-filter:blur(6px);
+}
+.kicker .dot{width:.55em;height:.55em;border-radius:50%;background:var(--cyan-400);box-shadow:0 0 12px var(--cyan-400)}
+h1,h2,h3{font-family:'Tajawal','Cairo',sans-serif;font-weight:800;line-height:1.12;letter-spacing:-.01em}
+.t-hero{font-size:4.6vw;font-weight:900;line-height:1.05}
+.t-xl{font-size:3.2vw;font-weight:900}
+.t-lg{font-size:2.5vw}
+.t-md{font-size:1.55vw}
+.lead{font-size:1.25vw;color:var(--muted);line-height:1.7;font-weight:400;max-width:44ch}
+.accent{color:var(--cyan-300)}
+.grad{background:linear-gradient(100deg,var(--cyan-300),var(--blue-500));-webkit-background-clip:text;background-clip:text;color:transparent}
+.divider{height:3px;width:9vw;border-radius:3px;background:linear-gradient(90deg,var(--cyan-400),var(--blue-600));margin:1.4vw 0}
+.eyebrow{color:var(--muted-2);font-size:.95vw;font-weight:600;letter-spacing:.14em}
+
+/* ===== Glass card ===== */
+.card{
+  background:var(--glass);border:1px solid var(--glass-brd);
+  border-radius:20px;backdrop-filter:blur(14px);
+  box-shadow:var(--shadow);
+  padding:1.6vw 1.7vw;
+  position:relative;overflow:hidden;
+}
+.card.soft{background:var(--glass-strong)}
+.card .ico{
+  width:3vw;height:3vw;min-width:3vw;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(140deg,rgba(37,99,235,.35),rgba(34,211,238,.18));
+  border:1px solid rgba(103,232,249,.3);
+  color:var(--cyan-300);
+}
+.card .ico svg{width:1.5vw;height:1.5vw}
+.grid{display:grid;gap:1.1vw}
+
+/* ===== Header bits shared ===== */
+.slide-head{display:flex;align-items:center;gap:1vw;margin-bottom:1.2vw}
+.idx-badge{
+  font-family:'IBM Plex Sans Arabic';font-weight:700;font-size:1vw;color:var(--cyan-300);
+  border:1px solid var(--glass-brd);border-radius:10px;padding:.35em .8em;background:var(--glass);
+}
+
+/* ===== Metric ===== */
+.metric .figure{font-family:'Tajawal';font-weight:900;font-size:3.1vw;line-height:1;background:linear-gradient(120deg,#fff,var(--cyan-300));-webkit-background-clip:text;background-clip:text;color:transparent}
+.metric .unit{font-size:1.3vw;color:var(--muted);font-weight:700}
+.metric .label{color:var(--muted);font-size:.98vw;margin-top:.5vw;line-height:1.5}
+
+/* progress + chrome */
+#chrome{position:fixed;bottom:0;left:0;right:0;z-index:50;pointer-events:none}
+#bar{height:4px;background:rgba(255,255,255,.08)}
+#bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan-400),var(--blue-600));transition:width .5s var(--ease);box-shadow:0 0 14px var(--cyan-400)}
+#nav{
+  position:fixed;bottom:2.2vh;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:14px;z-index:60;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(7,20,41,.7);border:1px solid var(--glass-brd);backdrop-filter:blur(12px);
+}
+.navbtn{
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--glass-brd);
+  background:var(--glass);color:var(--ink);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.navbtn:hover{background:var(--blue-600);border-color:var(--blue-500);transform:translateY(-2px)}
+.navbtn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.navbtn svg{width:18px;height:18px}
+#dots{display:flex;gap:7px}
+.dot-i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.22);cursor:pointer;transition:.25s}
+.dot-i.on{background:var(--cyan-400);width:22px;border-radius:5px;box-shadow:0 0 10px var(--cyan-400)}
+#counter{position:fixed;top:2.4vh;left:3vw;z-index:60;font-family:'IBM Plex Sans Arabic';font-size:.95vw;color:var(--muted);letter-spacing:.1em}
+#counter b{color:var(--ink)}
+.brand-mark{position:fixed;top:2.2vh;right:3vw;z-index:60;display:flex;align-items:center;gap:.5vw;font-weight:800;font-size:1.05vw;color:var(--ink)}
+.brand-mark .glyph{width:1.7vw;height:1.7vw;border-radius:9px;background:linear-gradient(140deg,var(--cyan-400),var(--blue-600));display:flex;align-items:center;justify-content:center;color:#04101f;font-weight:900}
+.hint{position:fixed;bottom:2.4vh;right:3vw;z-index:60;font-size:.82vw;color:var(--muted-2)}
+
+/* ==================== COVER ==================== */
+#s1{align-items:flex-start}
+.cover-wrap{position:relative;z-index:2;max-width:70%}
+.cover-orb{position:absolute;z-index:1;inset:0;pointer-events:none;overflow:hidden}
+.ring{
+  position:absolute;left:14%;top:50%;transform:translate(0,-50%);
+  width:34vw;height:34vw;border-radius:50%;
+  border:1px solid rgba(103,232,249,.18);
+  box-shadow:inset 0 0 80px rgba(34,211,238,.15);
+  animation:spin 40s linear infinite;
+}
+.ring::before,.ring::after{content:"";position:absolute;inset:14%;border-radius:50%;border:1px solid rgba(59,130,246,.2)}
+.ring::after{inset:30%;border-color:rgba(103,232,249,.28)}
+.ring .node{position:absolute;width:1vw;height:1vw;border-radius:50%;background:var(--cyan-300);box-shadow:0 0 18px var(--cyan-400);top:-.5vw;left:calc(50% - .5vw)}
+.shield-badge{
+  position:absolute;left:24%;top:50%;transform:translate(0,-50%);
+  width:9vw;height:9vw;border-radius:50%;
+  background:radial-gradient(circle at 40% 30%,rgba(59,130,246,.5),rgba(7,20,41,.9));
+  border:1px solid rgba(103,232,249,.35);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 60px rgba(37,99,235,.5);
+}
+.shield-badge svg{width:4.4vw;height:4.4vw;color:var(--cyan-300)}
+@keyframes spin{to{transform:translate(0,-50%) rotate(360deg)}}
+.cover-tag{display:flex;gap:1.4vw;margin-top:2vw;flex-wrap:wrap}
+.chip{font-size:.95vw;color:var(--muted);border:1px solid var(--glass-brd);border-radius:999px;padding:.5em 1.1em;background:var(--glass)}
+
+/* problem patterns */
+.pattern-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.9vw;margin-top:1.6vw}
+.pattern{padding:1.2vw 1vw;text-align:center}
+.pattern .emoji{font-size:1.9vw;display:block;margin-bottom:.6vw}
+.pattern h4{font-size:1vw;margin-bottom:.4vw}
+.pattern p{font-size:.8vw;color:var(--muted);line-height:1.5}
+
+/* bars chart */
+.bars{display:flex;align-items:flex-end;gap:2vw;height:15vw;padding:1vw 0}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.8vw;height:100%}
+.bar{width:70%;border-radius:12px 12px 4px 4px;background:linear-gradient(180deg,var(--cyan-400),var(--blue-600));position:relative;align-self:flex-end;box-shadow:0 0 30px rgba(37,99,235,.35);transition:height 1s var(--ease)}
+.bar .val{position:absolute;top:-2.2vw;left:50%;transform:translateX(-50%);font-weight:900;font-size:1.3vw;white-space:nowrap}
+.bar-lbl{font-size:.9vw;color:var(--muted);text-align:center;line-height:1.4}
+
+/* timeline / why now */
+.tl{display:flex;flex-direction:column;gap:1vw}
+.tl-item{display:flex;gap:1.2vw;align-items:flex-start}
+.tl-num{width:2.6vw;height:2.6vw;min-width:2.6vw;border-radius:12px;background:linear-gradient(140deg,var(--blue-600),var(--cyan-400));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2vw;color:#04101f}
+
+/* architecture layers */
+.layers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1vw}
+.layer{padding:1.5vw 1.4vw;position:relative}
+.layer .num{position:absolute;top:1.2vw;left:1.4vw;font-size:2.4vw;font-weight:900;color:rgba(255,255,255,.06);font-family:'Tajawal'}
+.layer h3{font-size:1.35vw;margin-bottom:.3vw}
+.layer .sub{font-size:.85vw;color:var(--cyan-300);margin-bottom:1vw;font-weight:700}
+.layer ul{list-style:none;display:flex;flex-direction:column;gap:.6vw}
+.layer li{font-size:.88vw;color:var(--muted);line-height:1.5;padding-right:1.1vw;position:relative}
+.layer li::before{content:"";position:absolute;right:0;top:.55em;width:.4vw;height:.4vw;border-radius:50%;background:var(--cyan-400)}
+
+/* scenario claim card */
+.claim{display:grid;grid-template-columns:1.3fr 1fr;gap:1.4vw;align-items:stretch}
+.claim-rows{display:flex;flex-direction:column;gap:.7vw}
+.claim-row{display:flex;justify-content:space-between;align-items:center;padding:.75vw 1vw;border-radius:12px;background:var(--glass);border:1px solid rgba(255,255,255,.07)}
+.claim-row .k{font-size:.92vw;color:var(--muted)}
+.claim-row .v{font-size:.98vw;font-weight:700}
+.claim-row .v.mono{font-family:'IBM Plex Sans Arabic';direction:ltr}
+.badge-bad{color:var(--bad);border:1px solid rgba(251,113,133,.4);background:rgba(251,113,133,.1);padding:.2em .7em;border-radius:8px;font-size:.85vw;font-weight:700}
+.gauge{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.gauge svg{width:13vw;height:13vw;transform:rotate(-90deg)}
+.gauge .score{font-size:3.4vw;font-weight:900;color:var(--bad);line-height:1}
+.gauge .score small{font-size:1.1vw;color:var(--muted)}
+.gauge .reco{margin-top:.6vw;font-size:1vw;color:var(--warn);font-weight:800}
+
+/* advantages */
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1vw}
+.adv{display:flex;gap:1vw;align-items:flex-start;padding:1.2vw 1.3vw}
+.adv h4{font-size:1.15vw;margin-bottom:.35vw}
+.adv p{font-size:.88vw;color:var(--muted);line-height:1.55}
+
+/* impact */
+.impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1vw;margin-top:.5vw}
+
+/* team */
+.team-card{display:flex;gap:2vw;align-items:center;padding:2vw 2.2vw}
+.avatar{width:9vw;height:9vw;min-width:9vw;border-radius:22px;background:linear-gradient(150deg,var(--blue-600),var(--cyan-400));display:flex;align-items:center;justify-content:center;color:#04101f;font-size:3.4vw;font-weight:900;box-shadow:0 0 50px rgba(37,99,235,.4)}
+.tag-row{display:flex;gap:.7vw;flex-wrap:wrap;margin-top:1vw}
+
+/* closing */
+#s11{align-items:center;text-align:center}
+#s11 .cta{display:inline-flex;align-items:center;gap:.7vw;margin-top:2vw;padding:1vw 2.4vw;border-radius:999px;background:linear-gradient(100deg,var(--blue-600),var(--cyan-400));color:#04101f;font-weight:900;font-size:1.3vw;box-shadow:0 0 50px rgba(37,99,235,.5)}
+.disclaimer{margin-top:2.4vw;font-size:.85vw;color:var(--muted-2);max-width:60ch;line-height:1.7}
+
+@media (max-aspect-ratio:16/9){#deck{width:100vw;height:56.25vw}}
+</style>
+</head>
+<body>
+
+<div id="counter"><b id="cur">01</b> / 11</div>
+<div class="brand-mark"><span class="glyph">ي</span><span>يقين</span></div>
+
+<div id="stage">
+<div id="deck">
+
+<!-- ========== 1 · COVER ========== -->
+<section class="slide active" id="s1">
+  <div class="cover-orb">
+    <div class="ring"><span class="node"></span></div>
+    <div class="shield-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg>
+    </div>
+  </div>
+  <div class="cover-wrap">
+    <div class="kicker reveal r1"><span class="dot"></span> عرض استثماري · الذكاء الاصطناعي في القطاع الصحي</div>
+    <h1 class="t-hero reveal r2" style="margin-top:1.4vw"><span class="grad">يقين</span><br>وكيل التحقيق في احتيال<br>مطالبات التأمين الصحي</h1>
+    <div class="divider reveal r3"></div>
+    <p class="lead reveal r4">وكيل ذكاء اصطناعي يُحقّق في مطالبات التأمين الصحي ويكشف الاحتيال <span class="accent">قبل صرف ريال واحد بالخطأ</span>.</p>
+    <div class="cover-tag reveal r5">
+      <span class="chip">🛡️ كشف استباقي للاحتيال</span>
+      <span class="chip">🤖 وكيل تحقيق آلي</span>
+      <span class="chip">🇸🇦 مبني على بنية NPHIES</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 2 · THE PROBLEM ========== -->
+<section class="slide" id="s2">
+  <div class="slide-head reveal r1"><span class="idx-badge">02</span><span class="eyebrow">المشكلة</span></div>
+  <h2 class="t-xl reveal r1">تسرّب مالي ضخم في قطاع <span class="grad">مُنظّم وسريع النمو</span></h2>
+  <p class="lead reveal r2" style="margin-top:.8vw">حدّدت هيئة التأمين الصحي أنماط احتيال واضحة — لكن لا يوجد حل محلّي متخصص يربط البيانات بسرعة القرار.</p>
+
+  <div class="grid reveal r3" style="grid-template-columns:repeat(3,1fr);margin-top:1.4vw">
+    <div class="card metric"><div class="figure">33<span class="unit"> مليار ريال</span></div><div class="label">إجمالي مطالبات التأمين الصحي في 2024</div></div>
+    <div class="card metric"><div class="figure">83<span class="unit">%</span></div><div class="label">نسبة الخسائر (Loss Ratio) في القطاع</div></div>
+    <div class="card metric"><div class="figure">3–10<span class="unit">%</span></div><div class="label">نسبة الاحتيال المُقدّرة عالمياً في التأمين الصحي</div></div>
+  </div>
+
+  <div class="pattern-grid reveal r5">
+    <div class="card pattern"><span class="emoji">🧾</span><h4>مطالبات وهمية</h4><p>فوترة خدمات لم تُقدّم أو تضخيم إجراءات بسيطة</p></div>
+    <div class="card pattern"><span class="emoji">🪪</span><h4>انتحال الهوية</h4><p>استخدام بطاقة تأمين شخص آخر للعلاج</p></div>
+    <div class="card pattern"><span class="emoji">🩺</span><h4>تلاعب بالترميز</h4><p>Upcoding و Unbundling في الأكواد الطبية</p></div>
+    <div class="card pattern"><span class="emoji">🛏️</span><h4>تنويم غير مبرّر</h4><p>أيام دخول لا داعي لها تُضاعف الفاتورة ×10</p></div>
+    <div class="card pattern"><span class="emoji">💊</span><h4>صرف أدوية غير مبرّر</h4><p>أدوية باهظة لا علاقة لها بالتشخيص</p></div>
+  </div>
+</section>
+
+<!-- ========== 3 · MARKET SIZE ========== -->
+<section class="slide" id="s3">
+  <div class="slide-head reveal r1"><span class="idx-badge">03</span><span class="eyebrow">حجم السوق بالأرقام</span></div>
+  <h2 class="t-xl reveal r1">سوقٌ <span class="grad">مليارية</span> وتسرّبٌ قابل للاسترداد</h2>
+
+  <div class="claim" style="grid-template-columns:1.1fr 1fr;margin-top:1.6vw;align-items:center">
+    <div class="reveal r3">
+      <div class="bars">
+        <div class="bar-col">
+          <div class="bar" style="height:0" data-h="92"><span class="val">40.7<small style="font-size:.8vw;font-weight:600"> مليار</small></span></div>
+          <div class="bar-lbl">إجمالي إيرادات<br>التأمين الصحي 2024</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" style="height:0" data-h="74"><span class="val">33<small style="font-size:.8vw;font-weight:600"> مليار</small></span></div>
+          <div class="bar-lbl">إجمالي المطالبات<br>المصروفة 2024</div>
+        </div>
+        <div class="bar-col">
+          <div class="bar" style="height:0;background:linear-gradient(180deg,var(--bad),#b91c4a)" data-h="20"><span class="val" style="color:var(--bad)">1.65–3.3<small style="font-size:.8vw;font-weight:600"> مليار</small></span></div>
+          <div class="bar-lbl">التسرّب السنوي<br>المُقدّر من الاحتيال</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid reveal r4" style="gap:1vw">
+      <div class="card metric"><div class="figure">23</div><div class="label">شركة تأمين صحي تعمل في السوق السعودي</div></div>
+      <div class="card"><div style="display:flex;gap:1vw;align-items:center">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <div><h3 class="t-md">ميزة بنية تحتية جاهزة</h3><p style="font-size:.88vw;color:var(--muted);margin-top:.3vw;line-height:1.5">منصة <b class="accent">NPHIES</b> توفّر بنية بيانات مركزية موحّدة جاهزة للتكامل الفوري.</p></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4 · WHY NOW ========== -->
+<section class="slide" id="s4">
+  <div class="slide-head reveal r1"><span class="idx-badge">04</span><span class="eyebrow">لماذا الآن؟</span></div>
+  <h2 class="t-xl reveal r1">لحظة نادرة يجتمع فيها <span class="grad">التنظيم والبيانات والتقنية</span></h2>
+
+  <div class="claim" style="grid-template-columns:1fr 1fr;margin-top:1.8vw;align-items:center">
+    <div class="tl reveal r3">
+      <div class="tl-item"><div class="tl-num">1</div><div><h3 class="t-md">بنية بيانات مركزية</h3><p style="font-size:.92vw;color:var(--muted);margin-top:.3vw;line-height:1.55">منصة NPHIES تجمع بيانات القطاع في مكان واحد — لأول مرة يمكن تحليل المطالبات آنياً على مستوى وطني.</p></div></div>
+      <div class="tl-item"><div class="tl-num">2</div><div><h3 class="t-md">دفعٌ تنظيمي واضح</h3><p style="font-size:.92vw;color:var(--muted);margin-top:.3vw;line-height:1.55">هيئة التأمين الصحي رصدت أنماط الاحتيال رسمياً وتتجه لمكافحتها.</p></div></div>
+      <div class="tl-item"><div class="tl-num">3</div><div><h3 class="t-md">نُضج الذكاء الاصطناعي</h3><p style="font-size:.92vw;color:var(--muted);margin-top:.3vw;line-height:1.55">وكلاء الذكاء الاصطناعي أصبحوا قادرين على بناء ملفات تحقيق كاملة في ثوانٍ.</p></div></div>
+      <div class="tl-item"><div class="tl-num">4</div><div><h3 class="t-md">خبرة محلية وتوقيت</h3><p style="font-size:.92vw;color:var(--muted);margin-top:.3vw;line-height:1.55">لا يوجد حل محلّي متخصص بعد — فرصة سبقٍ حقيقية للاعب الأول.</p></div></div>
+    </div>
+    <div class="card soft reveal r4" style="text-align:center;padding:2.4vw">
+      <div style="font-size:1vw;color:var(--muted);margin-bottom:1vw">النافذة الزمنية</div>
+      <div class="t-hero grad" style="font-size:3.6vw">الآن</div>
+      <p class="lead" style="margin:1.2vw auto 0;font-size:1.05vw">من يبني الطبقة الذكية فوق NPHIES اليوم، يصبح المعيار للقطاع غداً.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5 · THE SOLUTION ========== -->
+<section class="slide" id="s5">
+  <div class="slide-head reveal r1"><span class="idx-badge">05</span><span class="eyebrow">الحل</span></div>
+  <h2 class="t-xl reveal r1"><span class="grad">يقين</span> — طبقة ذكاء تُحقّق قبل الصرف</h2>
+  <p class="lead reveal r2" style="margin-top:.8vw;max-width:60ch">يُقيّم كل مطالبة لحظة وصولها، ويبني ملف تحقيق كاملاً بالأدلة عند ارتفاع الخطر، ويترك القرار النهائي للإنسان.</p>
+
+  <div class="grid reveal r4" style="grid-template-columns:repeat(3,1fr);margin-top:1.8vw">
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a4 4 0 0 1 4 4c1.5.5 2.5 2 2.5 3.7 0 .8-.2 1.5-.6 2.1.4.6.6 1.3.6 2.2A4 4 0 0 1 12 19a4 4 0 0 1-6.5-3c-.4-.6-.6-1.3-.6-2.2 0-.9.2-1.6.6-2.2A4 4 0 0 1 8 7a4 4 0 0 1 4-4z"/><path d="M12 3v16"/></svg></div>
+      <h3 class="t-md" style="margin-top:1vw">تقييم فوري للخطر</h3>
+      <p style="font-size:.92vw;color:var(--muted);margin-top:.4vw;line-height:1.6">درجة خطر من 0 إلى 100 لكل مطالبة عند وصولها — تعمل من اليوم الأول.</p>
+    </div>
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/><path d="M11 8v3l2 2"/></svg></div>
+      <h3 class="t-md" style="margin-top:1vw">وكيل تحقيق آلي</h3>
+      <p style="font-size:.92vw;color:var(--muted);margin-top:.4vw;line-height:1.6">يبني ملف القضية بالأدلة تلقائياً في ثوانٍ ويولّد تقريراً عربياً.</p>
+    </div>
+    <div class="card">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v4M12 3l-3 3M12 3l3 3"/><circle cx="12" cy="14" r="5"/><path d="M9.5 14l1.7 1.7 3-3.4"/></svg></div>
+      <h3 class="t-md" style="margin-top:1vw">القرار للإنسان</h3>
+      <p style="font-size:.92vw;color:var(--muted);margin-top:.4vw;line-height:1.6">تمرير آلي للمنخفض، وتصعيد المرتفع لمحقق SIU بملف جاهز.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6 · ARCHITECTURE ========== -->
+<section class="slide" id="s6">
+  <div class="slide-head reveal r1"><span class="idx-badge">06</span><span class="eyebrow">معمارية يقين</span></div>
+  <h2 class="t-xl reveal r1">ثلاث طبقات: <span class="grad">العقل · المحقّق · الإنسان</span></h2>
+
+  <div class="layers reveal r3" style="margin-top:1.4vw">
+    <div class="card layer">
+      <span class="num">01</span>
+      <h3>العقل التنبّؤي</h3>
+      <div class="sub">Predictive Model</div>
+      <ul>
+        <li>درجة خطر 0–100 لكل مطالبة فور وصولها</li>
+        <li>كشف الشذوذ: Isolation Forest / Autoencoder</li>
+        <li>نموذج مُوجَّه: XGBoost / LightGBM</li>
+        <li>تحليل الشبكات لكشف عصابات الاحتيال</li>
+        <li>SHAP لتفسير كل قرار للمحقق والمنظّم</li>
+      </ul>
+    </div>
+    <div class="card layer">
+      <span class="num">02</span>
+      <h3>وكيل التحقيق</h3>
+      <div class="sub">Investigation Agent</div>
+      <ul>
+        <li>يسحب سجل مقدّم الخدمة من NPHIES</li>
+        <li>يقارن المطالبات المشابهة</li>
+        <li>يتحقّق من منطق الترميز مقابل التشخيص</li>
+        <li>يتأكد من أهلية التأمين وقت الخدمة</li>
+        <li>يولّد تقرير تحقيق عربي بالأدلة</li>
+      </ul>
+    </div>
+    <div class="card layer">
+      <span class="num">03</span>
+      <h3>القرار البشري</h3>
+      <div class="sub">Human-in-the-Loop</div>
+      <ul>
+        <li>خطر منخفض ← اعتماد وصرف آلي</li>
+        <li>خطر مرتفع ← تصعيد لوحدة SIU بملف جاهز</li>
+        <li>قرارات المحقق تُغذّي النموذج (Active Learning)</li>
+        <li>القرار القانوني والمالي النهائي للإنسان دائماً</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card soft reveal r5" style="margin-top:1.2vw;display:flex;gap:1vw;align-items:center;padding:1vw 1.4vw">
+    <div class="ico" style="background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.35);color:var(--good)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg></div>
+    <p style="font-size:.95vw;color:var(--muted);line-height:1.5"><b class="accent">ملاحظة جوهرية:</b> درجة الخطر تأتي من نموذج إحصائي مُعايَر (XGBoost / كشف الشذوذ)، وليست من استنتاج حرّ لنموذج لغوي — لتجنّب مخاطر الهلوسة في القرارات عالية المخاطر.</p>
+  </div>
+</section>
+
+<!-- ========== 7 · AGENT SCENARIO ========== -->
+<section class="slide" id="s7">
+  <div class="slide-head reveal r1"><span class="idx-badge">07</span><span class="eyebrow">سيناريو عمل الوكيل</span></div>
+  <h2 class="t-xl reveal r1">من مطالبة مشبوهة إلى <span class="grad">قرار مدعوم بالأدلة</span></h2>
+
+  <div class="claim" style="margin-top:1.4vw">
+    <div class="card reveal r3">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1vw">
+        <h3 class="t-md">🔍 مطالبة قيد الفحص</h3>
+        <span class="badge-bad">تلاعب بالترميز · Upcoding</span>
+      </div>
+      <div class="claim-rows">
+        <div class="claim-row"><span class="k">مقدّم الخدمة</span><span class="v">مجمّع طبي <small style="color:var(--muted-2)">(بيانات افتراضية)</small></span></div>
+        <div class="claim-row"><span class="k">كود التشخيص (ICD-10)</span><span class="v mono">M54.5 · ألم أسفل الظهر</span></div>
+        <div class="claim-row"><span class="k">كود الإجراء (CPT)</span><span class="v mono">99215 · استشارة معقّدة (الأعلى)</span></div>
+        <div class="claim-row"><span class="k">مطالبات مشابهة (30 يوماً)</span><span class="v" style="color:var(--warn)">6 مطالبات مُعلّمة</span></div>
+        <div class="claim-row"><span class="k">التوصية</span><span class="v" style="color:var(--bad)">تصعيد إلى وحدة SIU</span></div>
+      </div>
+    </div>
+    <div class="card gauge reveal r4">
+      <div style="font-size:.95vw;color:var(--muted);margin-bottom:.6vw">درجة خطر الاحتيال</div>
+      <svg viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="12"/>
+        <circle id="gaugeArc" cx="60" cy="60" r="52" fill="none" stroke="url(#gg)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#fb7185"/></linearGradient></defs>
+      </svg>
+      <div class="score" style="margin-top:-8.5vw;margin-bottom:5vw">87<small>/100</small></div>
+      <div class="reco">⚠ خطر مرتفع — تصعيد فوري</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 8 · COMPETITIVE ADVANTAGES ========== -->
+<section class="slide" id="s8">
+  <div class="slide-head reveal r1"><span class="idx-badge">08</span><span class="eyebrow">المزايا التنافسية</span></div>
+  <h2 class="t-xl reveal r1">لماذا يصعب <span class="grad">تكرار يقين</span>؟</h2>
+
+  <div class="adv-grid reveal r3" style="margin-top:1.4vw">
+    <div class="card adv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2C7 2 3 6 3 11c0 6 9 11 9 11s9-5 9-11c0-5-4-9-9-9z"/><circle cx="12" cy="11" r="3"/></svg></div><div><h4>تخصّص محلّي عميق</h4><p>مبني على أنماط الاحتيال الرسمية لهيئة التأمين الصحي والترميز الطبي (ICD-10 / CPT) في السياق السعودي.</p></div></div>
+    <div class="card adv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg></div><div><h4>تكامل أصلي مع NPHIES</h4><p>يستفيد من البنية المركزية للبيانات لسحب السجلات والتحقق من الأهلية آنياً — ميزة لا تملكها الحلول العامة.</p></div></div>
+    <div class="card adv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div><div><h4>موثوقية بلا هلوسة</h4><p>درجات الخطر من نماذج إحصائية مُعايَرة قابلة للتفسير عبر SHAP — لا اعتماد على استنتاج لغوي حرّ في قرارات حسّاسة.</p></div></div>
+    <div class="card adv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a9 9 0 1 1-6.2-8.5"/><path d="M21 4v5h-5"/></svg></div><div><h4>تحسّن ذاتي مستمر</h4><p>كل قرار محقق يُغذّي النموذج (Active Learning) فيصبح النظام أدقّ مع الوقت — وتقارير جاهزة بالعربية.</p></div></div>
+  </div>
+</section>
+
+<!-- ========== 9 · EXPECTED IMPACT ========== -->
+<section class="slide" id="s9">
+  <div class="slide-head reveal r1"><span class="idx-badge">09</span><span class="eyebrow">الأثر المتوقع</span></div>
+  <h2 class="t-xl reveal r1">من <span class="grad">التسرّب</span> إلى <span class="grad">الاسترداد</span></h2>
+
+  <div class="impact-grid reveal r3" style="margin-top:1.4vw">
+    <div class="card metric"><div class="figure">1.65–3.3<span class="unit"> مليار</span></div><div class="label">حجم التسرّب السنوي القابل للحماية والاسترداد</div></div>
+    <div class="card metric"><div class="figure">ثوانٍ</div><div class="label">زمن بناء ملف تحقيق كامل بدل أيام من العمل اليدوي</div></div>
+    <div class="card metric"><div class="figure">قبل<span class="unit"> الصرف</span></div><div class="label">إيقاف الاحتيال استباقياً بدل ملاحقته بعد فوات الأوان</div></div>
+  </div>
+
+  <div class="grid reveal r5" style="grid-template-columns:1fr 1fr;margin-top:1.3vw">
+    <div class="card" style="display:flex;gap:1vw;align-items:flex-start">
+      <div class="ico" style="background:rgba(52,211,153,.15);border-color:rgba(52,211,153,.35);color:var(--good)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17l6-6 4 4 8-8"/><path d="M21 7v6h-6"/></svg></div>
+      <div><h4 class="t-md">نموذج تسعير بلا مخاطرة</h4><p style="font-size:.9vw;color:var(--muted);margin-top:.35vw;line-height:1.55">الدفع كنسبة من المبالغ المُستردّة فقط — يبدأ العائد على الاستثمار موثّقاً من أول عملية استرداد.</p></div>
+    </div>
+    <div class="card" style="display:flex;gap:1vw;align-items:flex-start">
+      <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></div>
+      <div><h4 class="t-md">قصة نجاح قابلة للتوسّع</h4><p style="font-size:.9vw;color:var(--muted);margin-top:.35vw;line-height:1.55">أول تجربة ناجحة تتحوّل إلى دليل عائد موثّق يُسرّع دورات البيع التالية عبر القطاع.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 10 · TEAM ========== -->
+<section class="slide" id="s10">
+  <div class="slide-head reveal r1"><span class="idx-badge">10</span><span class="eyebrow">فريق العمل</span></div>
+  <h2 class="t-xl reveal r1">فريقٌ <span class="grad">متعدّد التخصصات</span> من ثلاث جامعات</h2>
+
+  <div class="grid reveal r3" style="grid-template-columns:repeat(3,1fr);margin-top:2vw">
+    <div class="card" style="text-align:center;padding:2.2vw 1.4vw">
+      <div class="avatar" style="margin:0 auto 1.2vw;width:6vw;height:6vw;min-width:6vw;font-size:2.4vw;border-radius:20px">ن</div>
+      <h3 class="t-md">نايف السعدي</h3>
+      <p style="color:var(--cyan-300);font-weight:700;font-size:1.05vw;margin-top:.5vw">محاسبة</p>
+      <p style="color:var(--muted);font-size:.92vw;margin-top:.35vw">جامعة الملك سعود</p>
+    </div>
+    <div class="card" style="text-align:center;padding:2.2vw 1.4vw">
+      <div class="avatar" style="margin:0 auto 1.2vw;width:6vw;height:6vw;min-width:6vw;font-size:2.4vw;border-radius:20px">ع</div>
+      <h3 class="t-md">عبدالعزيز القاضي</h3>
+      <p style="color:var(--cyan-300);font-weight:700;font-size:1.05vw;margin-top:.5vw">المالية</p>
+      <p style="color:var(--muted);font-size:.92vw;margin-top:.35vw">جامعة الملك سعود</p>
+    </div>
+    <div class="card" style="text-align:center;padding:2.2vw 1.4vw">
+      <div class="avatar" style="margin:0 auto 1.2vw;width:6vw;height:6vw;min-width:6vw;font-size:2.4vw;border-radius:20px">م</div>
+      <h3 class="t-md">محمد الحميضي</h3>
+      <p style="color:var(--cyan-300);font-weight:700;font-size:1.05vw;margin-top:.5vw">العمل الاجتماعي</p>
+      <p style="color:var(--muted);font-size:.92vw;margin-top:.35vw">جامعة الإمام محمد بن سعود الإسلامية</p>
+    </div>
+  </div>
+  <div class="card soft reveal r5" style="margin-top:1.4vw;padding:1.1vw 1.5vw">
+    <p style="font-size:.98vw;color:var(--muted);line-height:1.6"><b class="accent">رؤية الفريق:</b> الجمع بين خلفيات المحاسبة والمالية والعمل الاجتماعي واهتمام تطبيقي بالذكاء الاصطناعي لحلّ تسرّب مالي حقيقي وموثّق في السوق السعودي — حيث تتوفّر بنية بيانات مركزية (NPHIES) ودفعٌ تنظيمي واضح ضد الاحتيال.</p>
+  </div>
+</section>
+
+<!-- ========== 11 · CLOSING ========== -->
+<section class="slide" id="s11">
+  <div class="cover-orb"><div class="ring" style="left:auto;right:8%"><span class="node"></span></div></div>
+  <div style="position:relative;z-index:2;max-width:70%">
+    <div class="kicker reveal r1" style="margin:0 auto"><span class="dot"></span> الشريحة الختامية</div>
+    <h2 class="t-hero reveal r2" style="margin-top:1.4vw;font-size:4vw">نكشف الاحتيال<br><span class="grad">قبل صرف ريال واحد بالخطأ</span></h2>
+    <p class="lead reveal r3" style="margin:1.4vw auto 0;text-align:center;max-width:52ch">«يقين» هو طبقة الذكاء الاصطناعي التي تحمي مليارات الريالات، وتحوّل التحقيق من عملية يدوية بطيئة إلى قرار فوري مدعوم بالأدلة.</p>
+    <div class="cta reveal r4"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 3v6c0 5-3.5 8.5-8 11-4.5-2.5-8-6-8-11V5l8-3z"/><path d="M9 12l2 2 4-4"/></svg> يقين · الثقة قبل الصرف</div>
+    <p class="disclaimer reveal r5" style="margin:2.4vw auto 0">هذا مشروع توضيحي تعليمي — ضمن دورة تدريبية في وكلاء الذكاء الاصطناعي. جميع بيانات العرض التوضيحي افتراضية بالكامل ولا تمثّل أي مريض أو مقدّم خدمة أو شركة حقيقية.</p>
+  </div>
+</section>
+
+</div><!-- /deck -->
+</div><!-- /stage -->
+
+<div id="chrome"><div id="bar"><i></i></div></div>
+<nav id="nav">
+  <button class="navbtn" id="prev" aria-label="السابق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></button>
+  <div id="dots"></div>
+  <button class="navbtn" id="next" aria-label="التالي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg></button>
+</nav>
+<div class="hint">→ ← للتنقّل · F لملء الشاشة</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let i=0;
+  const barI=document.querySelector('#bar>i');
+  const cur=document.getElementById('cur');
+  const dotsWrap=document.getElementById('dots');
+  const prev=document.getElementById('prev');
+  const next=document.getElementById('next');
+
+  slides.forEach((_,n)=>{
+    const d=document.createElement('span');
+    d.className='dot-i'+(n===0?' on':'');
+    d.addEventListener('click',()=>go(n));
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...dotsWrap.children];
+
+  function go(n){
+    n=Math.max(0,Math.min(total-1,n));
+    if(n===i)return;
+    const dir = n>i ? 1 : -1;
+    const outgoing=slides[i];
+    outgoing.classList.remove('active');
+    outgoing.classList.toggle('prev', dir>0);
+    slides[n].classList.remove('prev');
+    void slides[n].offsetWidth;
+    slides[n].classList.add('active');
+    i=n;
+    update();
+  }
+  function update(){
+    barI.style.width=((i)/(total-1)*100)+'%';
+    cur.textContent=String(i+1).padStart(2,'0');
+    dots.forEach((d,n)=>d.classList.toggle('on',n===i));
+    prev.disabled=i===0;
+    next.disabled=i===total-1;
+    runSlideFx(i);
+  }
+
+  function runSlideFx(n){
+    const s=slides[n];
+    if(s.id==='s3'){
+      s.querySelectorAll('.bar').forEach(b=>{b.style.height='0';requestAnimationFrame(()=>{setTimeout(()=>b.style.height=b.dataset.h+'%',180);});});
+    }
+    if(s.id==='s7'){
+      const arc=document.getElementById('gaugeArc');
+      arc.style.transition='none';arc.style.strokeDashoffset='326.7';
+      requestAnimationFrame(()=>{setTimeout(()=>{arc.style.transition='stroke-dashoffset 1.3s cubic-bezier(.22,.61,.36,1)';arc.style.strokeDashoffset=(326.7*(1-0.87)).toFixed(1);},250);});
+    }
+  }
+
+  prev.addEventListener('click',()=>go(i-1));
+  next.addEventListener('click',()=>go(i+1));
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(i-1);}
+    else if(['ArrowLeft','ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(i+1);}
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+    else if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();}else{document.exitFullscreen&&document.exitFullscreen();}}
+  });
+
+  let sx=0;
+  document.addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(dx<0?i+1:i-1);},{passive:true});
+
+  update();
+  runSlideFx(0);
+})();
+</script>
+</body>
+</html>
